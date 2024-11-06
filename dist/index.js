@@ -2,6 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const crypto = require("crypto");
 const buffer_1 = require("buffer");
+const readline = require("readline");
+// Configuração da entrada do usuário
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+});
 // Defina a chave e o vetor de inicialização
 const key = crypto.randomBytes(32); // Chave AES de 256 bits
 const iv = crypto.randomBytes(16); // Vetor de inicialização de 16 bytes
@@ -21,9 +27,16 @@ function decrypt(encryptedText) {
     decrypted += decipher.final("utf8");
     return decrypted;
 }
-// Testando a cifragem e decifragem
-const message = "Esta é uma mensagem secreta!";
-const encryptedMessage = encrypt(message);
-console.log("Mensagem Cifrada:", encryptedMessage);
-const decryptedMessage = decrypt(encryptedMessage);
-console.log("Mensagem Decifrada:", decryptedMessage);
+// Função para iniciar o processo de cifragem e decifragem
+function startEncryptionProcess() {
+    rl.question("Digite uma mensagem para cifrar (ou pressione Enter para usar a mensagem padrão): ", (inputMessage) => {
+        const message = inputMessage || "Esta é uma mensagem secreta!"; // Mensagem padrão
+        const encryptedMessage = encrypt(message);
+        console.log("\nMensagem Cifrada:", encryptedMessage);
+        const decryptedMessage = decrypt(encryptedMessage);
+        console.log("Mensagem Decifrada:", decryptedMessage);
+        rl.close(); // Finaliza a interface de leitura
+    });
+}
+// Iniciar o processo
+startEncryptionProcess();
